@@ -1,3 +1,29 @@
+﻿
+
+function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+function eraseCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999;';
+}
+
+
 function minimum_rate_from_given_and_base(given_price, buy_price) {
   return 10000 * (given_price - 1) / buy_price;
 }
@@ -177,7 +203,7 @@ function* generate_pattern_0_with_lengths(given_prices, high_phase_1_len, dec_ph
     });
   }
   yield {
-    pattern_description: "high, decreasing, high, decreasing, high",
+    pattern_description: "波浪型",
     pattern_number: 0,
     prices: predicted_prices
   };
@@ -285,7 +311,7 @@ function* generate_pattern_1_with_peak(given_prices, peak_start) {
     });
   }
   yield {
-    pattern_description: "decreasing, high spike, random lows",
+    pattern_description: "三期型",
     pattern_number: 1,
     prices: predicted_prices
   };
@@ -351,7 +377,7 @@ function* generate_pattern_2(given_prices) {
     max_rate -= 300;
   }
   yield {
-    pattern_description: "always decreasing",
+    pattern_description: "炒燶了", // GG
     pattern_number: 2,
     prices: predicted_prices
   };
@@ -507,7 +533,7 @@ function* generate_pattern_3_with_peak(given_prices, peak_start) {
   }
 
   yield {
-    pattern_description: "decreasing, spike, decreasing",
+    pattern_description: "四期型",
     pattern_number: 3,
     prices: predicted_prices
   };
@@ -573,37 +599,67 @@ $(document).ready(function () {
   })
 });
 
-$(document).on("input", function() {
-  // Update output on any input change
+$(document).on("input", function () {
+    // Update output on any input change
 
-  var buy_price = parseInt($("#buy").val());
+    var summary_array = [];
+    var buy_price = parseInt($("#buy").val());
 
-  var sell_prices = [buy_price, buy_price];
-  for (var i = 2; i < 14; i++) {
-    sell_prices.push(parseInt($("#sell_" + i).val()));
-  }
+    //setCookie("buy" + i, buy_price);
 
-  localStorage.setItem("sell_prices", JSON.stringify(sell_prices));
-
-  const is_empty = sell_prices.every(sell_price => !sell_price);
-  if (is_empty) {
-    $("#output").html("");
-    return;
-  }
-
-  var output_possibilities = "";
-  for (let poss of generate_possibilities(sell_prices)) {
-    var out_line = "<tr><td>" + poss.pattern_description + "</td>"
-    for (let day of [...poss.prices].slice(1)) {
-      if (day.min != day.max) {
-        out_line += "<td>" + day.min + ".." + day.max + "</td>"
-      } else {
-        out_line += "<td>" + day.min + "</td>"
-      }
+    var sell_prices = [buy_price, buy_price];
+    for (var i = 2; i < 14; i++) {
+        sell_prices.push(parseInt($("#sell_" + i).val()));
+        //setCookie("sell_" + i, parseInt($("#sell_" + i).val()));
     }
-    out_line += "</tr>"
-    output_possibilities += out_line
-  }
 
-  $("#output").html(output_possibilities)
-})
+
+
+
+
+    localStorage.setItem("sell_prices", JSON.stringify(sell_prices));
+
+    const is_empty = sell_prices.every(sell_price => !sell_price);
+    if (is_empty) {
+        $("#output").html("");
+        $("#output_summary").html("");
+        return;
+    }
+
+    var output_possibilities = "";
+    var output_possibilities_summary = "";
+    for (let poss of generate_possibilities(sell_prices)) {
+        var out_line = "<tr><td>" + poss.pattern_description + "</td>"
+        summary_array[poss.pattern_description] = { max: 0, daymin: 0, daymax: 0 };
+
+        for (let day of [...poss.prices].slice(1)) {
+
+            if (day.min + day.max > summary_array[poss.pattern_description].max) {
+                summary_array[poss.pattern_description].max = day.min + day.max;
+                summary_array[poss.pattern_description].daymin = day.min;
+                summary_array[poss.pattern_description].daymax = day.max;
+            }
+
+
+            if (day.min != day.max) {
+                out_line += "<td>" + day.min + "~" + day.max + "</td>"
+            } else {
+                out_line += "<td>" + day.min + "</td>"
+            }
+        }
+        out_line += "</tr>"
+        output_possibilities += out_line
+    }
+    $("#output").html(output_possibilities)
+
+
+    for (var item in summary_array) {
+        output_possibilities_summary += "<tr><td>" + item + "</td><td>" + summary_array[item].daymin + " ~ " + summary_array[item].daymax + "</td></tr>";
+    }
+
+
+    $("#output_summary").html(output_possibilities_summary);
+});
+
+
+
