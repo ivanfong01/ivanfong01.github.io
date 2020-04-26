@@ -45,50 +45,47 @@
         </div>
         <div class="row">
             <h4>基本股價</h4>
+            </div>
+        <div class="row">
+            <div class="three columns">買入價</div><div class="nine columns"><input class="u-full-width" type="number" pattern="[0-9]*" id="buy" /></div>
+            </div>
+        <div class="row">
+                <table class="u-full-width">
+                    <thead>
+                        <tr>
+                            <th style="min-width:10%;"></th>
+                            <th>一</th>
+                            <th>二</th>
+                            <th>三</th>
+                            <th>四</th>
+                            <th>五</th>
+                            <th>六</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                        <tr>
+                            <td>上午</td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_2" /></td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_4" /></td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_6" /></td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_8" /></td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_10" /></td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_12" /></td>
+                        </tr>
+                        <tr>
+                            <td>下午</td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_3" /></td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_5" /></td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_7" /></td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_9" /></td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_11" /></td>
+                            <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_13" /></td>
 
-            <table class="u-full-width">
-                <thead>
-                    <tr>
-                        <th style="width:30%;">時間點</th>
-                        <th>上午</th>
-                        <th>下午</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>買入價</td><td><input class="u-full-width" type="number" pattern="[0-9]*" id="buy" /></td><td></td></tr>
-                    <tr>
-                        <td>星期一</td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_2" /></td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_3" /></td>
-                    </tr>
-                    <tr>
-                        <td>星期二</td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_4" /></td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_5" /></td>
-                    </tr>
-                    <tr>
-                        <td>星期三</td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_6" /></td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_7" /></td>
-                    </tr>
-                    <tr>
-                        <td>星期四</td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_8" /></td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_9" /></td>
-                    </tr>
-                    <tr>
-                        <td>星期五</td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_10" /></td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_11" /></td>
-                    </tr>
-                    <tr>
-                        <td>星期六</td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_12" /></td>
-                        <td><input class="u-full-width" type="number" pattern="[0-9]*" id="sell_13" /></td>
-                    </tr>
-                </tbody>
+                        </tr>
+                    </tbody>
 
-            </table>
+                </table>
         </div>
         <div class="row">
             <button class="button-primary" id="reset">Reset</button>
@@ -147,6 +144,9 @@
                 </div>
 
                 <div class="tab-pane active" id="summary">
+                    <div class="row" id="result_pic">
+
+                    </div>
                     <table class="u-full-width">
                         <thead>
                             <tr>
@@ -161,162 +161,12 @@
 
 
 
-                </div>
+                    </div>
             </div>
         </div>
     </div>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!--
-    <p>
-        This tool is in early development - it will work best if you have all of the days data, morning and night.
-        Without that it will not work hugely well.
-        At a minimum this needs the buy price <b>on your own island</b>! (What you actually bought them for if it was on another island is not relevant)
-    </p>
-    <p>
-        I couldn't have done this without <a href="https://twitter.com/_Ninji/status/1244818665851289602?s=20">Ninji's work extracting the code</a>
-    </p>
-    <p>
-        The first week in which you buy turnips from Daisy is treated specially - this tool doesn't handle that. It will only work if this is the second week onwards
-    </p>
-    <p>
-        To use - enter the buy price on your island, and any prices you have from the morning or afternoon of each day. The tool will figure out all possible patterns and predict the lowest and highest prices for each day.
-    </p>
-    <form>
-        <p>
-            <label>Daisy Mae</label><br>
-            <label>
-                Buy price
-                <input type="number" pattern="[0-9]*" id="buy">
-            </label>
-        </p>
-        <p>
-            <label>Monday</label><br>
-            <label>
-                AM
-                <input type="number" pattern="[0-9]*" id="sell_2">
-            </label>
-            <label>
-                PM
-                <input type="number" pattern="[0-9]*" id="sell_3">
-            </label>
-        </p>
-        <p>
-            <label>Tuesday</label><br>
-            <label>
-                AM
-                <input type="number" pattern="[0-9]*" id="sell_4">
-            </label>
-            <label>
-                PM
-                <input type="number" pattern="[0-9]*" id="sell_5">
-            </label>
-        </p>
-        <p>
-            <label>Wednesday</label><br>
-            <label>
-                AM
-                <input type="number" pattern="[0-9]*" id="sell_6">
-            </label>
-            <label>
-                PM
-                <input type="number" pattern="[0-9]*" id="sell_7">
-            </label>
-        </p>
-        <p>
-            <label>Thursday</label><br>
-            <label>
-                AM
-                <input type="number" pattern="[0-9]*" id="sell_8">
-            </label>
-            <label>
-                PM
-                <input type="number" pattern="[0-9]*" id="sell_9">
-            </label>
-        </p>
-        <p>
-            <label>Friday</label><br>
-            <label>
-                AM
-                <input type="number" pattern="[0-9]*" id="sell_10">
-            </label>
-            <label>
-                PM
-                <input type="number" pattern="[0-9]*" id="sell_11">
-            </label>
-        </p>
-        <p>
-            <label>Saturday</label><br>
-            <label>
-                AM
-                <input type="number" pattern="[0-9]*" id="sell_12">
-            </label>
-            <label>
-                PM
-                <input type="number" pattern="[0-9]*" id="sell_13">
-            </label>
-        </p>
-        <button id="reset">Reset</button>
-    </form>
-
-    <p>
-
-    </p>
-
-    <p>
-        <table>
-            <caption>Your turnip prices will be one of the following patterns. Each cell contains the minimum..maximum price for that half-day. If you don't have a pattern, this likely means that this is the first week that you bought turnips from Daisy in your farm - and this tool won't work for you. Check back next week!</caption>
-            <thead>
-                <tr>
-                    <th>Pattern</th>
-                    <th>Sunday</th>
-                    <th colspan="2">Monday</th>
-                    <th colspan="2">Tuesday</th>
-                    <th colspan="2">Wednesday</th>
-                    <th colspan="2">Thursday</th>
-                    <th colspan="2">Friday</th>
-                    <th colspan="2">Saturday</th>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th>AM</th>
-                    <th>PM</th>
-                    <th>AM</th>
-                    <th>PM</th>
-                    <th>AM</th>
-                    <th>PM</th>
-                    <th>AM</th>
-                    <th>PM</th>
-                    <th>AM</th>
-                    <th>PM</th>
-                    <th>AM</th>
-                    <th>PM</th>
-                </tr>
-            </thead>
-            <tbody id="output">
-            </tbody>
-        </table>
-    </p>
-
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="js/scripts.js"></script>
-        -->
 </body>
 </html>

@@ -628,6 +628,7 @@ $(document).on("input", function () {
 
     var output_possibilities = "";
     var output_possibilities_summary = "";
+    var status = "";
     for (let poss of generate_possibilities(sell_prices)) {
         var out_line = "<tr><td>" + poss.pattern_description + "</td>"
         summary_array[poss.pattern_description] = { max: 0, daymin: 0, daymax: 0 };
@@ -650,13 +651,23 @@ $(document).on("input", function () {
         out_line += "</tr>"
         output_possibilities += out_line
     }
-    $("#output").html(output_possibilities)
-
-
+    $("#output").html(output_possibilities);
+    
+    var count = 0;
+    var item_desc = "";
     for (var item in summary_array) {
         output_possibilities_summary += "<tr><td>" + item + "</td><td>" + summary_array[item].daymin + " ~ " + summary_array[item].daymax + "</td></tr>";
+        count = count + 1;
+        item_desc = item;
     }
+    if (count == 1) {
 
+        if (item_desc == "炒燶了") {
+            $("div#result_pic").html("<img class=\".u-full-width\" src=\"images/rip.jpg\"/>");
+        }
+    } else {
+        $("div#result_pic").html("");
+    }
 
     $("#output_summary").html(output_possibilities_summary);
 });
