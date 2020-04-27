@@ -24,6 +24,49 @@ function eraseCookie(name) {
 }
 
 
+function getDateFromMonday(dd) {
+    // start from 0
+    d = new Date();
+    var day = d.getDay(),
+        diff = d.getDate() - day + (day == 0 ? -6 : 1) + dd / 2; // adjust when day is sunday
+    d = new Date(new Date(d.setDate(diff)).setHours(6 + (12 * (dd % 2))));
+
+
+    return d;
+}
+
+function createChart(data) {
+    var options = {
+        animationEnabled: true,
+        axisY: {
+            includeZero: false,
+            prefix: "",
+            lineThickness: 0
+        },
+        toolTip: {
+            shared: true
+        },
+        legend: {
+            fontSize: 13
+        },
+        data: [{
+            type: "splineArea",
+            showInLegend: true,
+            name: "最高價格",
+            xValueFormatString: "D/M TT",
+            dataPoints: data.overall.max
+        },
+        {
+            type: "splineArea",
+            showInLegend: true,
+            name: "最低價格",
+            dataPoints: data.overall.min
+            }
+        ]
+    };
+    $("#chartContainer").CanvasJSChart(options);
+}
+
 function minimum_rate_from_given_and_base(given_price, buy_price) {
   return 10000 * (given_price - 1) / buy_price;
 }
@@ -603,6 +646,7 @@ $(document).on("input", function () {
     // Update output on any input change
 
     var summary_array = [];
+    var chart_array = [];
     var buy_price = parseInt($("#buy").val());
 
     //setCookie("buy" + i, buy_price);
@@ -629,10 +673,14 @@ $(document).on("input", function () {
     var output_possibilities = "";
     var output_possibilities_summary = "";
     var status = "";
+
+    chart_array["overall"] = { max: [], min: [] };
     for (let poss of generate_possibilities(sell_prices)) {
         var out_line = "<tr><td>" + poss.pattern_description + "</td>"
-        summary_array[poss.pattern_description] = { max: 0, daymin: 0, daymax: 0 };
 
+        summary_array[poss.pattern_description] = { max: 0, daymin: 0, daymax: 0 };
+        if (chart_array[poss.pattern_description] == undefined) chart_array[poss.pattern_description] = { max: [], min: [] };
+        var i = 0;
         for (let day of [...poss.prices].slice(1)) {
 
             if (day.min + day.max > summary_array[poss.pattern_description].max) {
@@ -640,19 +688,43 @@ $(document).on("input", function () {
                 summary_array[poss.pattern_description].daymin = day.min;
                 summary_array[poss.pattern_description].daymax = day.max;
             }
+            if (i > 0) {
+                var new_entry_max = { x: getDateFromMonday(i - 1), y: day.max };
+                var new_entry_min = { x: getDateFromMonday(i - 1), y: day.min };
 
+
+
+                for (const item of Object.keys(chart_array)) {
+                    if (i > chart_array[item].max.length) {
+                        chart_array[item].max.push(new_entry_max);
+                        chart_array[item].min.push(new_entry_min);
+                    } else {
+                        if (chart_array[item].max[i - 1].y < day.max) {
+                            chart_array[item].max[i - 1].y = day.max
+                        }
+
+                        if (chart_array[item].min[i - 1].y > day.min) {
+                            chart_array[item].min[i - 1].y = day.min
+                        }
+                    }
+
+                }
+
+
+
+            }
 
             if (day.min != day.max) {
                 out_line += "<td>" + day.min + "~" + day.max + "</td>"
             } else {
                 out_line += "<td>" + day.min + "</td>"
             }
+            i++;
         }
         out_line += "</tr>"
         output_possibilities += out_line
     }
     $("#output").html(output_possibilities);
-    
     var count = 0;
     var item_desc = "";
     for (var item in summary_array) {
@@ -670,7 +742,14 @@ $(document).on("input", function () {
     }
 
     $("#output_summary").html(output_possibilities_summary);
+    console.log(chart_array.overall);
+    createChart(chart_array);
+
 });
+
+
+
+
 
 
 
